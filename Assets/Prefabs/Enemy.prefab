@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4701439787374263950}
   - component: {fileID: 4701439787374263949}
   - component: {fileID: 4701439787374263952}
-  - component: {fileID: 4701439787374263953}
+  - component: {fileID: 2633729798677724657}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -100,7 +100,6 @@ MonoBehaviour:
   playerBase: {fileID: 0}
   moveTime: 0.07
   speed: 30
-  health: 5
 --- !u!50 &4701439787374263952
 Rigidbody2D:
   serializedVersion: 4
@@ -122,7 +121,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!58 &4701439787374263953
+--- !u!58 &2633729798677724657
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -132,7 +131,7 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

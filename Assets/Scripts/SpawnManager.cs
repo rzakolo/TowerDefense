@@ -5,22 +5,27 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] GameObject[] enemyPrefabs;
+    GameManager gameManager;
     Vector2[] spawnPos;
-    float repeatRate = 3;
+    [SerializeField] float repeatRate = 3f;
+    [SerializeField] float spawnTime = 3f;
     void Start()
     {
-        InvokeRepeating(nameof(SpawnWave), 3f, repeatRate);
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        InvokeRepeating(nameof(SpawnWave), spawnTime, repeatRate);
     }
 
     void Update()
     {
-        
+
     }
-    void SpawnWave() 
+    void SpawnWave()
     {
         foreach (GameObject enemy in enemyPrefabs)
         {
+            enemy.transform.position = transform.position;
             Instantiate(enemy);
         }
+        gameManager.UpdateEnemyList();
     }
 }

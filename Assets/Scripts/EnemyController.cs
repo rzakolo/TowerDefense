@@ -13,13 +13,14 @@ public class EnemyController : MonoBehaviour
     SpriteRenderer spriteRenderer;
     Material baseMaterial;
     Material newMaterial;
+    int _damage = 1;
     int _health = 5;
     public int Health
     {
         get { return _health; }
         set
         {
-            TakeDamage();
+            ReceiveDamage();
             _health = value;
         }
     }
@@ -38,7 +39,6 @@ public class EnemyController : MonoBehaviour
             lookDirection = (playerBase.transform.position - transform.position).normalized;
             enemyRb.AddForce(lookDirection * speed);
             enemyRb.velocity = Vector2.zero;
-            //transform.position += playerBase.transform.position * Time.deltaTime;
             time = moveTime;
         }
         time -= Time.deltaTime;
@@ -47,10 +47,14 @@ public class EnemyController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    void TakeDamage()
+    void ReceiveDamage()
     {
         spriteRenderer.material = newMaterial;
         Invoke(nameof(ResetToBaseMaterial), 0.3f);
+    }
+    public void MakeDamage()
+    {
+        playerBase.GetComponent<PlayerBase>().Health -= _damage;
     }
     void ResetToBaseMaterial()
     {
