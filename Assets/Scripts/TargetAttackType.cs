@@ -1,17 +1,17 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackEnemy : MonoBehaviour
+public class TargetAttackType : BaseAttack
 {
-    float radious = 5f;
-    float shootRate = 1.5f;
+    //float radious = 5f;
+    //float shootRate = 1.5f;
 
-    float distance;
-    bool hasEnemyOnTarget = false;
-    EnemyController enemyTarget;
-    GameManager gameManager;
-    GameObject shootRadiousCircle;
+    //float distance;
+    //bool hasEnemyOnTarget = false;
+    //EnemyController enemyTarget;
+    //GameManager gameManager;
+    //GameObject shootRadiousCircle;
     private void Start()
     {
         shootRadiousCircle = gameObject.transform.GetChild(0).gameObject;
@@ -33,37 +33,25 @@ public class AttackEnemy : MonoBehaviour
                 }
             }
     }
-    void Attack()
+    protected override void Attack()
     {
         if (enemyTarget != null)
         {
             distance = Vector3.Distance(transform.position, enemyTarget.transform.position);
             if (enemyTarget.Health > 0 && distance < radious)
             {
-                enemyTarget.Health--;
+                enemyTarget.Health -= attackDamage;
+                if (enemyTarget.Health <= 0 || enemyTarget == null)
+                {
+                    ClearTarget();
+                    return;
+                }
                 Invoke(nameof(Attack), shootRate);
             }
             else
             {
-                hasEnemyOnTarget = false;
+                ClearTarget();
             }
         }
-        else
-        {
-            hasEnemyOnTarget = false;
-        }
-    }
-    void AddToTarget(EnemyController enemy)
-    {
-        if (!hasEnemyOnTarget || enemyTarget.Health <= 0)
-        {
-            enemyTarget = enemy;
-            Attack();
-            hasEnemyOnTarget = true;
-        }
-    }
-    private void OnMouseDown()
-    {
-        //gameManager.SetToTarget(gameObject);
     }
 }

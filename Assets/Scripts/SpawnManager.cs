@@ -14,11 +14,6 @@ public class SpawnManager : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         InvokeRepeating(nameof(SpawnWave), spawnTime, repeatRate);
     }
-
-    void Update()
-    {
-
-    }
     void SpawnWave()
     {
         foreach (GameObject enemy in enemyPrefabs)

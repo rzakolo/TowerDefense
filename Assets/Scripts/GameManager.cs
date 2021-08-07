@@ -2,19 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
     public List<EnemyController> enemys;
     private GameObject[] temp;
-    [SerializeField] GameObject gameMap;
-    float boundX;
-    float boundY;
+    public Vector3 gameMapSize;
+    [SerializeField] Tilemap tilemap;
     GameObject targetObject;
     RaycastHit2D ray;
     private void Start()
     {
-        gameMap = GameObject.Find("Environment");
+        gameMapSize = GameObject.Find("Environment").GetComponent<Tilemap>().cellBounds.size;
+        Debug.Log("x: " + tilemap.cellBounds.size.x + " y: " + tilemap.cellBounds.size.y);
         UpdateEnemyList();
     }
     private void Update()
@@ -48,6 +49,10 @@ public class GameManager : MonoBehaviour
     }
     private void SetToTarget(GameObject target)
     {
+        if (targetObject != null && !targetObject.Equals(target))
+        {
+            ClearTarget();
+        }
         targetObject = target;
 
         if (targetObject.CompareTag("Enemy"))
