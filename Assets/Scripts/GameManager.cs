@@ -1,17 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class GameManager : MonoBehaviour
 {
+    private int money = 0;
     public List<EnemyController> enemys;
     private GameObject[] temp;
     public Vector3 gameMapSize;
     [SerializeField] Tilemap tilemap;
     GameObject targetObject;
     RaycastHit2D ray;
+    [SerializeField] TextMeshProUGUI moneyCounterText;
     private void Start()
     {
         gameMapSize = GameObject.Find("Environment").GetComponent<Tilemap>().cellBounds.size;
@@ -67,5 +70,10 @@ public class GameManager : MonoBehaviour
         {
             targetObject.transform.GetChild(0).gameObject.SetActive(true);
         }
+    }
+    public void SetMoney(int value)
+    {
+        money += value;
+        moneyCounterText.text = $"Money: {money}";
     }
 }

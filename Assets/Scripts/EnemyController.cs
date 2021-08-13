@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class EnemyController : MonoBehaviour
 {
     [SerializeField] GameObject playerBase;
+    GameManager gameManager;
     Rigidbody2D enemyRb;
     Vector2 lookDirection;
     float time = 0;
@@ -28,6 +29,7 @@ public class EnemyController : MonoBehaviour
     }
     private void Start()
     {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseMaterial = spriteRenderer.material;
         newMaterial = Resources.Load("enemyBlink", typeof(Material)) as Material;
@@ -46,6 +48,7 @@ public class EnemyController : MonoBehaviour
         time -= Time.deltaTime;
         if (Health <= 0)
         {
+            gameManager.SetMoney(100);
             Destroy(gameObject);
         }
     }

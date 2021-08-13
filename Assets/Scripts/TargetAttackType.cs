@@ -4,18 +4,9 @@ using UnityEngine;
 
 public class TargetAttackType : BaseAttack
 {
-    //float radious = 5f;
-    //float shootRate = 1.5f;
-
-    //float distance;
-    //bool hasEnemyOnTarget = false;
-    //EnemyController enemyTarget;
-    //GameManager gameManager;
-    //GameObject shootRadiousCircle;
     private void Start()
     {
-        shootRadiousCircle = gameObject.transform.GetChild(0).gameObject;
-        shootRadiousCircle.transform.localScale = new Vector2(radious * 2, radious * 2);
+        SetVisibleAttackRadious();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
@@ -25,8 +16,7 @@ public class TargetAttackType : BaseAttack
             {
                 if (enemy != null)
                 {
-                    distance = Vector3.Distance(transform.position, enemy.transform.position);
-                    if (distance < radious)
+                    if (CorrectDistance(enemyTarget))
                     {
                         AddToTarget(enemy);
                     }
@@ -37,10 +27,10 @@ public class TargetAttackType : BaseAttack
     {
         if (enemyTarget != null)
         {
-            distance = Vector3.Distance(transform.position, enemyTarget.transform.position);
-            if (enemyTarget.Health > 0 && distance < radious)
+            if (enemyTarget.Health > 0 && CorrectDistance(enemyTarget))
             {
                 enemyTarget.Health -= attackDamage;
+                BulletTracer();
                 if (enemyTarget.Health <= 0 || enemyTarget == null)
                 {
                     ClearTarget();
