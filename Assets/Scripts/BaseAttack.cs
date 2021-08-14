@@ -11,6 +11,7 @@ public abstract class BaseAttack : MonoBehaviour
     protected float radious = 5f;
     protected float shootRate = 1.5f;
     public int attackDamage = 1;
+    public int cost = 1;
 
     protected float distance;
     protected bool hasEnemyOnTarget = false;
@@ -39,6 +40,7 @@ public abstract class BaseAttack : MonoBehaviour
         }
         return false;
     }
+
     /// <summary>
     /// Устанавливает размер дочернего объекта строения
     /// </summary>

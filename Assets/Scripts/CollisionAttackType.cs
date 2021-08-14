@@ -8,6 +8,7 @@ public class CollisionAttackType : BaseAttack
     [SerializeField] GameObject bulletPrefab;
     private void Start()
     {
+        cost = 100;
         SetVisibleAttackRadious();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }

@@ -6,6 +6,7 @@ public class TargetAttackType : BaseAttack
 {
     private void Start()
     {
+        cost = 500;
         SetVisibleAttackRadious();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
