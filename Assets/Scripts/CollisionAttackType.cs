@@ -5,48 +5,46 @@ using UnityEngine;
 
 public class CollisionAttackType : BaseAttack
 {
-    [SerializeField] GameObject bulletPrefab;
-    private void Start()
+    [SerializeField] Bullet bulletPrefab;
+
+    private void OnValidate()
     {
         cost = 100;
-        SetVisibleAttackRadious();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        attackDamage = 5;
     }
+
     private void Update()
     {
-        foreach (EnemyController enemy in gameManager.enemys)
+        fireRate -= Time.deltaTime;
+        if (fireRate < 0)
         {
-            if (CorrectDistance(enemy))
-            {
-                AddToTarget(enemy);
-            }
+            CheckRadius();
+            fireRate = _fireRate;
+            Attack();
         }
     }
     protected override void Attack()
     {
-        if (CorrectDistance(enemyTarget))
+        if (IsCorrectDistance(enemyTarget))
         {
-            if (enemyTarget.Health <= 0 || enemyTarget == null)
+            if (enemyTarget == null || enemyTarget.Health <= 0)
             {
                 ClearTarget();
                 return;
             }
             Fire();
-            Invoke(nameof(Attack), shootRate);
         }
-        else
-            Invoke(nameof(ClearTarget), shootRate);
     }
     void Fire()
     {
         if (enemyTarget != null)
         {
             transform.right = enemyTarget.transform.position - transform.position;
-            Vector2 position = new Vector2(transform.position.x, transform.position.y);
-            GameObject temp = Instantiate(bulletPrefab, position, transform.rotation);
-            Vector2 direction = new Vector2(transform.position.x - enemyTarget.transform.position.x, transform.position.y - enemyTarget.transform.position.y);
-            temp.GetComponent<Bullet>().SetDirection(direction);
-            temp.GetComponent<Bullet>().SetParentGameObject(gameObject);
+            Vector2 position = transform.position;
+            Bullet temp = Instantiate(bulletPrefab, position, transform.rotation);
+            Vector2 direction = transform.position - enemyTarget.transform.position;
+            temp.SetDirection(direction);
+            temp.SetDamage(attackDamage);
         }
     }
 }

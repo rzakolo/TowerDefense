@@ -7,8 +7,8 @@ public class Bullet : MonoBehaviour
     CollisionAttackType master;
     [SerializeField] float speed = 1;
     Rigidbody2D bulletRb;
-    bool setMaster = true;
     Vector2 direction;
+    private int attackDamage;
     void Start()
     {
         bulletRb = GetComponent<Rigidbody2D>();
@@ -18,10 +18,8 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!setMaster)
-        {
-            bulletRb.AddForce(-direction * speed);
-        }
+
+        bulletRb.AddForce(-direction * speed);
         if (transform.position.magnitude > 100)
         {
             Destroy(gameObject);
@@ -31,18 +29,16 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyController>().Health -= master.attackDamage;
+            collision.gameObject.GetComponent<EnemyController>().Health -= attackDamage;
             Destroy(gameObject);
         }
     }
-    public void SetParentGameObject(GameObject parent)
+    public void SetDamage(int damage)
     {
-        if (setMaster)
-        {
-            this.master = parent.GetComponent<CollisionAttackType>();
-            setMaster = false;
-        }
+        attackDamage = damage;
     }
+
+
     public void SetDirection(Vector2 direction)
     {
         this.direction = direction;

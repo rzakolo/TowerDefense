@@ -8,37 +8,32 @@ using UnityEngine;
 
 public abstract class BaseAttack : MonoBehaviour
 {
-    protected float radious = 5f;
-    protected float shootRate = 1.5f;
+    protected float radius = 5f;
+    protected float fireRate = 1.5f;
+    protected float _fireRate;
     public int attackDamage = 1;
-    public int cost = 1;
-
+    public int cost;
+    public float updateTargetRate;
     protected float distance;
-    protected bool hasEnemyOnTarget = false;
-    protected EnemyController enemyTarget;
-
-    protected GameManager gameManager;
+    [SerializeField] protected EnemyController enemyTarget;
     protected GameObject shootRadiousCircle;
-    protected void AddToTarget(EnemyController enemy)
-    {
-        if (enemyTarget == null)
-            Invoke(nameof(ClearTarget), shootRate);
-        if (!hasEnemyOnTarget)
-        {
-            enemyTarget = enemy;
-            hasEnemyOnTarget = true;
-            Attack();
-        }
-    }
-    protected bool CorrectDistance(EnemyController enemy)
+
+    protected bool IsCorrectDistance(EnemyController enemy)
     {
         if (enemy != null)
-            distance = Vector3.Distance(transform.position, enemy.transform.position);
-        if (distance < radious)
+            distance = Vector2.Distance(transform.position, enemy.transform.position);
+        //Debug.Log(distance);
+        if (distance < radius + 0.4f)
         {
             return true;
         }
         return false;
+    }
+    protected void CheckRadius()
+    {
+        var hit = Physics2D.CircleCast(transform.position, radius, Vector2.zero, LayerMask.NameToLayer("CollisionArea"));
+        if (hit.collider != null)
+            enemyTarget = hit.collider.gameObject.GetComponent<EnemyController>();
     }
 
     /// <summary>
@@ -47,14 +42,12 @@ public abstract class BaseAttack : MonoBehaviour
     protected void SetVisibleAttackRadious()
     {
         shootRadiousCircle = gameObject.transform.GetChild(0).gameObject;
-        shootRadiousCircle.transform.localScale = new Vector2(radious * 2, radious * 2);
+        shootRadiousCircle.transform.localScale = new Vector2(radius * 2, radius * 2);
     }
     protected abstract void Attack();
     protected void ClearTarget()
     {
-        hasEnemyOnTarget = false;
         enemyTarget = null;
-        CancelInvoke();
     }
     protected virtual void BulletTracer()
     {
@@ -64,6 +57,13 @@ public abstract class BaseAttack : MonoBehaviour
         tracer.positionCount = 2;
         tracer.SetPosition(1, transform.position);
         tracer.SetPosition(0, enemyTarget.transform.position);
+    }
+    private void OnEnable()
+    {
+        SetVisibleAttackRadious();
+        updateTargetRate = 1;
+        _fireRate = fireRate;
+        //InvokeRepeating(nameof(CheckRadius), updateTargetRate, updateTargetRate);
     }
 }
 

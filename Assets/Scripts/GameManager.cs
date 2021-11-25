@@ -11,13 +11,14 @@ public class GameManager : MonoBehaviour
     private int money = 0;
     public List<EnemyController> enemys;
     private GameObject[] temp;
-    public Vector3 gameMapSize;
+    public Vector3Int gameMapSize;
     public bool gameOver = false;
     private bool moveBuilding = false;
     [SerializeField] Tilemap tilemap;
     GameObject targetObject;
-    GameObject movingBuilding;
+    BaseAttack movingBuilding;
     RaycastHit2D ray;
+    Camera mainCamera;
 
     [SerializeField] TextMeshProUGUI moneyCounterText;
     [SerializeField] Button sellButton;
@@ -27,10 +28,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-
+        mainCamera = Camera.main;
         gameMapSize = GameObject.Find("Environment").GetComponent<Tilemap>().cellBounds.size;
         Debug.Log("x: " + tilemap.cellBounds.size.x + " y: " + tilemap.cellBounds.size.y);
-        UpdateEnemyList();
     }
     private void Update()
     {
@@ -39,28 +39,30 @@ public class GameManager : MonoBehaviour
             Vector3 mousePos = (Camera.main.ScreenToWorldPoint(Input.mousePosition));
             mousePos.z = 0;
             ray = Physics2D.Raycast(mousePos, Vector2.zero);
-            if (ray.transform != null)
-                SetToTarget(ray.transform.gameObject);
-            else
+            if (ray.transform == null)
+            {
                 ClearTarget();
+                return;
+            }
+            if (ray.transform.gameObject.CompareTag("Buy") && !moveBuilding)
+            {
+                BuyBuilding(ray.transform.gameObject.GetComponent<BuyBuilding>().GetBuilding());
+                return;
+            }
+            if (!moveBuilding)
+                SetToTarget(ray.transform.gameObject);
         }
-        if (Input.GetMouseButtonDown(1) && moveBuilding)
+        if (moveBuilding)
         {
-            Vector3 mousePos = (Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            mousePos.z = 0;
-            SetBuildingPos(mousePos);
+            Vector3 mousePos = (mainCamera.ScreenToWorldPoint(Input.mousePosition));
+            ray = Physics2D.Raycast(mousePos, Vector2.zero);
+            if (ray.transform == null)
+                return;
+            movingBuilding.transform.position = ray.point;
+            if (Input.GetMouseButtonDown(1))
+                SetBuildingPos(ray.point);
         }
         moneyCounterText.text = $"{money}$";
-    }
-
-    public void UpdateEnemyList()
-    {
-        temp = GameObject.FindGameObjectsWithTag("Enemy");
-        enemys.Clear();
-        foreach (GameObject enemy in temp)
-        {
-            enemys.Add(enemy.GetComponent<EnemyController>());
-        }
     }
     private void ClearTarget()
     {
@@ -128,8 +130,8 @@ public class GameManager : MonoBehaviour
     }
     public void MoveBuilding()
     {
-        movingBuilding = targetObject;
-        movingBuilding.SetActive(false);
+        movingBuilding = targetObject.GetComponent<BaseAttack>();
+        movingBuilding.enabled = false;
         sellButton.gameObject.SetActive(false);
         moveButton.gameObject.SetActive(false);
         moveBuilding = true;
@@ -137,11 +139,28 @@ public class GameManager : MonoBehaviour
     private void SetBuildingPos(Vector2 position)
     {
         movingBuilding.transform.position = position;
-        movingBuilding.SetActive(true);
+        movingBuilding.enabled = true;
         moveBuilding = false;
         movingBuilding = null;
     }
-    public void BuyBuilding()
+    public void BuyBuilding(BaseAttack building)
+    {
+        if (money - building.cost >= 0)
+        {
+            money -= building.cost;
+            targetObject = Instantiate(building.gameObject);
+            MoveBuilding();
+        }
+        else
+        {
+            Destroy(building.gameObject);
+        }
+    }
+    public void GameOver()
+    {
+
+    }
+    public void GamePaused()
     {
 
     }

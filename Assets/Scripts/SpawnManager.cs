@@ -21,6 +21,5 @@ public class SpawnManager : MonoBehaviour
             enemy.transform.position = transform.position;
             Instantiate(enemy);
         }
-        gameManager.UpdateEnemyList();
     }
 }

@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1456509930}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 10, y: 10, z: 0}
   m_Children: []
   m_Father: {fileID: 2679654985327349096}
   m_RootOrder: 0
@@ -109,7 +109,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8060101760256059946}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.56, y: 1.38, z: 0}
+  m_LocalPosition: {x: -8.083654, y: 1.0961539, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1456509931}
@@ -179,8 +179,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e202d286d92c946b61766ce6f260e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 1
-  bulletPrefab: {fileID: 6414917510159547231, guid: 7d6072400b53c7745b62530168d7f6b4, type: 3}
+  attackDamage: 5
+  cost: 100
+  updateTargetRate: 0
+  enemyTarget: {fileID: 0}
+  bulletPrefab: {fileID: 1057192015189364519, guid: 7d6072400b53c7745b62530168d7f6b4, type: 3}
 --- !u!58 &1652472412
 CircleCollider2D:
   m_ObjectHideFlags: 0

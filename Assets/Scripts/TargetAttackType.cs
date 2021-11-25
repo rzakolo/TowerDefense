@@ -4,45 +4,37 @@ using UnityEngine;
 
 public class TargetAttackType : BaseAttack
 {
-    private void Start()
+
+    private void OnValidate()
     {
         cost = 500;
-        SetVisibleAttackRadious();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     void Update()
     {
-        if (gameManager != null && gameManager.enemys != null)
-            foreach (EnemyController enemy in gameManager.enemys)
-            {
-                if (enemy != null)
-                {
-                    if (CorrectDistance(enemyTarget))
-                    {
-                        AddToTarget(enemy);
-                    }
-                }
-            }
+        fireRate -= Time.deltaTime;
+        if (fireRate < 0)
+        {
+            CheckRadius();
+            fireRate = _fireRate;
+            Attack();
+        }
     }
+
     protected override void Attack()
     {
-        if (enemyTarget != null)
+        if (IsCorrectDistance(enemyTarget))
         {
-            if (enemyTarget.Health > 0 && CorrectDistance(enemyTarget))
-            {
-                enemyTarget.Health -= attackDamage;
-                BulletTracer();
-                if (enemyTarget.Health <= 0 || enemyTarget == null)
-                {
-                    ClearTarget();
-                    return;
-                }
-                Invoke(nameof(Attack), shootRate);
-            }
-            else
+            enemyTarget.Health -= attackDamage;
+            BulletTracer();
+            if (enemyTarget.Health <= 0 || enemyTarget == null)
             {
                 ClearTarget();
+                return;
             }
+        }
+        else
+        {
+            ClearTarget();
         }
     }
 }

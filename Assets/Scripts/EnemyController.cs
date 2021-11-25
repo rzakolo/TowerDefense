@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,7 +7,7 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] GameObject playerBase;
+    [SerializeField] PlayerBase playerBase;
     GameManager gameManager;
     Rigidbody2D enemyRb;
     Vector2 lookDirection;
@@ -18,6 +19,7 @@ public class EnemyController : MonoBehaviour
     Material newMaterial;
     int _damage = 1;
     int _health = 5;
+
     public int Health
     {
         get { return _health; }
@@ -33,7 +35,7 @@ public class EnemyController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         baseMaterial = spriteRenderer.material;
         newMaterial = Resources.Load("enemyBlink", typeof(Material)) as Material;
-        playerBase = GameObject.Find("Base");
+        playerBase = GameObject.Find("Base").GetComponent<PlayerBase>();
         enemyRb = GetComponent<Rigidbody2D>();
     }
     void Update()
@@ -57,10 +59,12 @@ public class EnemyController : MonoBehaviour
         spriteRenderer.material = newMaterial;
         Invoke(nameof(ResetToBaseMaterial), 0.3f);
     }
-    public void MakeDamage()
+    public void MakeDamage(int damage)
     {
-        playerBase.GetComponent<PlayerBase>().Health -= _damage;
+
     }
+
+
     void ResetToBaseMaterial()
     {
         spriteRenderer.material = baseMaterial;

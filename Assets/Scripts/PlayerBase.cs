@@ -1,30 +1,29 @@
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBase : MonoBehaviour
+public class PlayerBase : MonoBehaviour, IHealth, IDamageable
 {
-    public int Health = 100;
+    private int minHealth, maxHealth, currentHealth;
+    public event Action<int> OnHealthChanged;
+
     float radious = 1;
     float distance;
 
-    GameManager gameManager;
-    private void Start()
+    [SerializeField] GameManager gameManager;
+    private void Init()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        InvokeRepeating(nameof(CheckEnemys), 1, 1);
+        minHealth = 0;
+        maxHealth = 100;
     }
-    void CheckEnemys()
-    {
-        foreach (var enemy in gameManager.enemys)
-        {
-            if (enemy != null)
-            {
-                distance = Vector3.Distance(transform.position, enemy.transform.position);
-                if (distance < radious)
-                    enemy.MakeDamage();
-            }
-        }
 
+    public void ApplyDamage(int damage)
+    {
+        if (currentHealth - damage < 0)
+        {
+            //todo: не дописано
+        }
+        OnHealthChanged?.Invoke(damage);
     }
 }
